@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Pipeline xmlns="http://meep.example.com/Meep/V1"
+    xmlns:xi="http://www.w3.org/2003/XInclude"
+    xmlns:s="http://meep.example.com/MeepSQL/V1"
+	Name="PingHistory">
+	
+	<!-- Record ping times in a database for a simple record of your connection quality -->
+	
+	<!-- Gather in batches of 5 samples and save them in a SQLite database 
+		 called "Cookbook" in a table called "Pings". Meep will create the
+		 database and table for you if it doesn't already exist, basing the
+		 table structure on the Step messages that Ping returns. -->
+	<Batch MaxSize="5" s:Store="Cookbook:Pings">		
+        <Ping To="mit.edu">
+            <Timer Interval="00:00:10"/>
+        </Ping>
+    </Batch>
+	
+</Pipeline>
