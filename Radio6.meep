@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Pipeline xmlns="http://meep.example.com/Meep/V1"
+    xmlns:xi="http://www.w3.org/2003/XInclude"
+    xmlns:s="http://meep.example.com/MeepSQL/V1"
+	  Name="Radio6">
+  <!-- Read Radio 6's "Now Playing" feed and display the tracks -->
+  
+
+  <!-- We're only interested to know when a new song is playing. -->
+  <DistinctUntilChanged From="$.title" Unbatch="Children" WriteLine="$.title">
+    <!-- Pull out the most recent, track 0. Meep will recognise the From argument as a JPath and assume the message is in JSON format. -->
+    <Extract From="$.packages.richtracks[0]" Unbatch="Children">
+      <!-- Unwrap the Javascript callback syntax BBC uses. This will result in a BatchMessage that has to be Unbatched above because <Extract> doesn't assume the Regex will only ever return one match. -->
+      <Extract From="/\((.*)\)/">
+        <!-- The raw feed that powers the "Recently Played/Now Playing" display on Radio 6's web site -->
+        <Get URL="https://polling.bbc.co.uk/radio/nhppolling/bbc_6music">
+          <Timer Interval="00:00:30"/>
+        </Get>
+      </Extract>
+    </Extract>
+  </DistinctUntilChanged>  
+  
+</Pipeline>
